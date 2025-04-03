@@ -1,5 +1,6 @@
 package web.service;
 
+import org.springframework.context.annotation.ComponentScan;
 import web.dao.UserDao;
 import web.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@ComponentScan("web")
 public class UserServiceImp implements UserService {
 
     @Autowired

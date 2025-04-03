@@ -1,5 +1,6 @@
 package web.dao;
 
+import org.springframework.context.annotation.ComponentScan;
 import web.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -9,6 +10,7 @@ import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 @Repository
+@ComponentScan("web")
 public class UserDaoImp implements UserDao {
 
     //@Autowired
@@ -29,7 +31,7 @@ public class UserDaoImp implements UserDao {
     public void delete(Long id) {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        User user = (User)em.find(User.class,id);
+        User user = em.find(User.class,id);
 
         if (user != null) {
             em.remove(user);
@@ -38,7 +40,6 @@ public class UserDaoImp implements UserDao {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<User> listUsers() {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();

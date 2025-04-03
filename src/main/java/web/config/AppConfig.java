@@ -2,7 +2,6 @@ package web.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import web.model.User;
 import org.springframework.context.annotation.Bean;
 
 import javax.persistence.EntityManagerFactory;
