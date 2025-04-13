@@ -1,6 +1,6 @@
 package web.controller;
 
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -9,19 +9,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import web.model.User;
 import web.service.UserService;
+import web.service.UserValidationService;
 
-
+import javax.validation.ConstraintViolation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-@ComponentScan("web")
 @Controller
 public class UserController {
 
 	private final UserService userService;
+	private final UserValidationService userValidationService;
 
-	public UserController(UserService userService) {
+	@Autowired
+	public UserController(UserService userService, UserValidationService userValidationService) {
 		this.userService = userService;
+		this.userValidationService = userValidationService;
 	}
 
 	@GetMapping(value = "/")
@@ -42,13 +46,22 @@ public class UserController {
 
 	@PostMapping(value = "/addUser")
 	public String addUserInTable(
-			@RequestParam(required = false) String name,
-			@RequestParam(required = false) String lastName,
-			@RequestParam(required = false) String email,
+			String name,
+			String lastName,
+			String email,
 			Model model) {
 
-		userService.add(new User(name,lastName,email));
+		String msg;
+
+		if (validateUser(new User(name,lastName,email), userValidationService)) {
+			msg = "Fields must be filled!";
+		} else {
+			userService.add(new User(name, lastName, email));
+			msg = "User successfully added!";
+		}
+
 		List<User> users = userService.listUsers();
+		model.addAttribute("msg", msg);
 		model.addAttribute("users", users);
 
 		return "usersTable";
@@ -65,4 +78,14 @@ public class UserController {
 
 		return "usersTable";
 	}
+
+
+	private static boolean validateUser(User user,
+									   UserValidationService userValidationService) {
+		// список отловленных нарушений правил, здесь просто возвращает пустой или нет
+		Set<ConstraintViolation<User>> violations = userValidationService.validateUser(user);
+
+		return !violations.isEmpty();
+	}
+
 }
