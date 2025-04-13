@@ -15,7 +15,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import javax.persistence.EntityManagerFactory;
-//import javax.persistence.Persistence;
 import javax.sql.DataSource;
 import java.util.Properties;
 
@@ -26,14 +25,6 @@ import java.util.Properties;
 @PropertySource("classpath:db.properties")
 public class AppConfig {
 
-    //конфигурация EntityManagerFactory() с помощью xml файла (persistence.xml)
-//   @Bean
-//   public EntityManagerFactory createEntityManagerFactory() {
-//      return Persistence.createEntityManagerFactory("spring_hiber");
-//   }
-
-    //конфигурация EntityManagerFactory() програмно
-
     private final Environment env;
 
     @Autowired
@@ -41,7 +32,6 @@ public class AppConfig {
         this.env = env;
     }
 
-    // валидатор
     @Bean
     LocalValidatorFactoryBean validator() {
         return new LocalValidatorFactoryBean();
@@ -71,8 +61,6 @@ public class AppConfig {
     public Properties hibernateProperties() {
         Properties hibernateProp = new Properties();
         hibernateProp.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
-        //диалект для базы HSQLDB
-        //hibernateProp.put("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
         hibernateProp.put("hibernate.format_sql", "true");
         hibernateProp.put("hibernate.use_sql_comments", "true");
         hibernateProp.put("hibernate.show_sql", "true");
@@ -86,11 +74,9 @@ public class AppConfig {
     @Bean
     public EntityManagerFactory entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
-        //scanning models package
         factoryBean.setPackagesToScan("web");
         factoryBean.setDataSource(dataSource());
         factoryBean.setJpaProperties(hibernateProperties());
-        //factoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         factoryBean.setJpaVendorAdapter(jpaVendorAdapter());
         factoryBean.afterPropertiesSet();
 

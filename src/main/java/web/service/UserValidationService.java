@@ -11,7 +11,6 @@ import java.util.Set;
 @Service("userValidationService")
 public class UserValidationService {
 
-	// "внедряется экземпляр javax.validation.Validator"
 	@Autowired
 	private Validator validator;
 

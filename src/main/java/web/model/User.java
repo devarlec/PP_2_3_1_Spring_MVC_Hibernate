@@ -2,7 +2,6 @@ package web.model;
 
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.validator.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
